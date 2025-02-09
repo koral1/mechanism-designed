@@ -1,1 +1,1 @@
-# mechanism_designed
+# mechanism-designed
