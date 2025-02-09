@@ -1,14 +1,30 @@
 import pandas as pd
 import json
 import re
+import sys
+import os
+import argparse
 
+def getArgs():
+     #获取参数
+    parser = argparse.ArgumentParser(description="Compute mechanism penalty with configurable parameters.")
+    # parser.add_argument('--model', type=str, required=True, help='Model name or path, e.g., Qwen/Qwen2.5-7B-Instruct')
+    # parser.add_argument('--train_type', type=str, default='lora', help='Training type, e.g., lora')
+    parser.add_argument('--liar_file', type=str, required=True, help='liar_file')
+    parser.add_argument('--output_file', type=str, required=True, help='output_file')    
+    parser.add_argument('--output_file_2', type=str, required=True, help='output_file_2')    
 
+args = getArgs()
+ 
 # 读取LIAR数据集
-liar_file = 'train.tsv'
+liar_file = args.liar_file
+# liar_file = 'valid.tsv'
+
 liar_data = pd.read_csv(liar_file, sep='\t', header=None)
 
 # 定义输出文件
-output_file = 'train_data_reject.jsonl'
+output_file = args.output_file
+output_file_2 = args.output_file_2
 
 # 打开输出文件
 with open(output_file, 'w') as jsonl_file:
@@ -41,11 +57,13 @@ with open(output_file, 'w') as jsonl_file:
                 },
                 {
                     "from": "gpt",
-                    "value": f"This statement is {label}."
+                    # "value": f"This statement is {label}."
+                    "value": f"{label}"
+
                 }
             ],
-            "system": "Please evaluate the truthfulness of the statement.",
-            "rejected_response": "I don't know."
+            "system": "Please evaluate the truthfulness of the statement."
+            # ,"rejected_response": "I don't know."
         }
 
         # 将转换结果写入jsonl文件
@@ -53,6 +71,7 @@ with open(output_file, 'w') as jsonl_file:
 
 print(f"转换完成，结果已保存至 {output_file}")
 
+#过滤脏数据
 def filter_jsonl(input_file, output_file, key_to_remove='json'):
     with open(input_file, 'r', encoding='utf-8') as infile, \
          open(output_file, 'w', encoding='utf-8') as outfile:
@@ -63,5 +82,7 @@ def filter_jsonl(input_file, output_file, key_to_remove='json'):
                 outfile.write(json.dumps(record) + '\n')
 
 # 使用示例
-filter_jsonl(output_file, 'train_data_reject1.jsonl')
+filter_jsonl(output_file, output_file_2)
+# filter_jsonl(output_file, 'binary_valid_data_final.jsonl')
+
 print(f"转换完成，结果已保存至 {output_file}")
