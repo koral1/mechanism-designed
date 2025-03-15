@@ -14,11 +14,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # 假设这是你的根目录
-root_dir = 'mechanism-designed/ms-swift'
-sys.path.append(os.path.join(root_dir, 'swift', 'plugin'))
+# root_dir = 'mechanism-designed/ms-swift'
+# sys.path.append(os.path.join(root_dir, 'swift', 'plugin'))
 
-from custom_loss_func.mechanism import compute_mechanism_penalty
-from custom_loss_func.simple import simple_mechanism_loss_compute
+from .custom_loss_func.mechanism import compute_mechanism_penalty
+from .custom_loss_func.simple import simple_mechanism_loss_compute
 
 
 class LossType:
@@ -59,6 +59,8 @@ def getArgs():
     parser.add_argument('--max_length', type=int, default=1024, help='Maximum length of input sequences')
     parser.add_argument('--warmup_ratio', type=float, default=0.05, help='Warmup ratio for learning rate scheduler')
     parser.add_argument('--dataloader_num_workers', type=int, default=4, help='Number of workers for the data loader')
+    parser.add_argument('--val_dataset', type=str, required=True, help='Path to the dataset file')
+
 
     args = parser.parse_args()
     return args
