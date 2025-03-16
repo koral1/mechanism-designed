@@ -8,34 +8,18 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # 读取验证数据
-df = pd.read_csv('/ossfs/node_51483402/workspace/inference/test_data/binary_test.csv')
+df = pd.read_csv('dataset/data/test_data.csv')
 prompts = df['prompt'].tolist()
 true_labels = df['label'].tolist()
 
-# 初始化tokenizer
-#SFT-multi-有脏数据
-# tokenizer = AutoTokenizer.from_pretrained("/ossfs/node_51483402/workspace/output_liar_sft/v4-20250125-231821/checkpoint-500-merged")
-#基模型
-# tokenizer = AutoTokenizer.from_pretrained("/ossfs/node_51483402/workspace/Qwen/Qwen2.5-7B-Instruct")
-#机制设计-binary-有脏数据
-# tokenizer = AutoTokenizer.from_pretrained("/ossfs/node_51483402/workspace/output_final/mechanism_dirty/v5-20250130-165157/checkpoint-500-merged")
 #机制设计-binary-lambda
-tokenizer = AutoTokenizer.from_pretrained("/ossfs/node_51483402/workspace/output_final/sft/v1-20250201-043532/checkpoint-500-merged")
-
-
+tokenizer = AutoTokenizer.from_pretrained("output/mechanism_similarity/lambda-0-val/v2-20250316-013213/checkpoint-500-merged")
 
 # 设置采样参数
 sampling_params = SamplingParams(temperature=0.7, top_p=0.8, repetition_penalty=1.05, max_tokens=512)
 
 # 初始化LLM
-#SFT-multi-有脏数据
-# llm = LLM(model="/ossfs/node_51483402/workspace/output_liar_sft/v4-20250125-231821/checkpoint-500-merged")
-#基模型
-# llm = LLM(model="/ossfs/node_51483402/workspace/Qwen/Qwen2.5-7B-Instruct")
-#机制设计-binary-有脏数据
-# llm = LLM(model="/ossfs/node_51483402/workspace/output_final/mechanism/v5-20250130-165157/checkpoint-500-merged")
-#机制设计-binary-lambda
-llm = LLM(model="/ossfs/node_51483402/workspace/output_final/sft/v1-20250201-043532/checkpoint-500-merged")
+llm = LLM(model="output/mechanism_similarity/lambda-0-val/v2-20250316-013213/checkpoint-500-merged")
 
 predicted_labels = []
 generated_texts = []
@@ -102,7 +86,7 @@ print(f"F1 Score: {f1}")
 report = classification_report(true_labels, predicted_labels)
 print(report)
 # 将报告保存到文件
-with open('sft_classification_report.txt', 'w') as f:
+with open('result/lambda-0-val/report.txt', 'w') as f:
     f.write(f"Accuracy: {accuracy}\n")
     f.write(f"Precision: {precision}\n")
     f.write(f"Recall: {recall}\n")
@@ -111,10 +95,10 @@ with open('sft_classification_report.txt', 'w') as f:
     f.write(report)
 
 # print("报告已保存到 'sft_classification_report.txt'")
-print("报告已保存到 'origin_classification_report.txt'")
+print("报告已保存到 'report.txt'")
 
 
 df['predicted_label'] = predicted_labels
 df['generated_text'] = generated_texts
 # df.to_csv('sft_test_results_with_predictions.csv', index=False)
-df.to_csv('sft_test_results_with_predictions.csv', index=False)
+df.to_csv('result/lambda-0-val/results_with_predictions.csv', index=False)
