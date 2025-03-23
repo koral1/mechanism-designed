@@ -45,6 +45,9 @@ class TemplateArguments:
     min_distance_threshold:float = 0.1
     base_lambda:float = 1
     sequence_parallel_size: int = 1
+    true_penalty:float = 0
+    false_penalty:float = 0
+    
     # infer/deploy
     use_chat_template: bool = True
     template_backend: Literal['swift', 'jinja'] = 'swift'

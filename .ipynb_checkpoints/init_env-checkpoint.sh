@@ -7,6 +7,7 @@ export HF_ENDPOINT=https://hf-mirror.com
 
 #更新依赖
 #SFT
+export HF_ENDPOINT=https://hf-mirror.com
 pip install --upgrade pip
 pip install jinja2 peft
 pip install transformers -U
@@ -15,15 +16,16 @@ pip install transformers==4.38.0
 pip install markupsafe==2.0.1
 pip install --upgrade pydantic
 pip install --upgrade deepspeed
-pip install accelerate==1.0.1
+pip install accelerate==1.1.1
 pip install vllm
 # conda install -c conda-forge mlx-lm
 # pip install mlx-lm
 pip install --upgrade pyarrow
 pip install transformers==4.40.0
+pip install --upgrade transformers
 pip install bitsandbytes -U
+pip install --upgrade torch
 conda update --all
-
 
 
 

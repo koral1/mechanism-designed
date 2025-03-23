@@ -24,6 +24,7 @@ pip install --upgrade pyarrow
 pip install transformers==4.40.0
 pip install --upgrade transformers
 pip install bitsandbytes -U
+pip install --upgrade torch
 conda update --all
 
 
